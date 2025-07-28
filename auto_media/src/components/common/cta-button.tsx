@@ -1,52 +1,59 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { createStyles } from '@mantine/styles';
+import React from "react";
+import { createStyles } from "@mantine/styles";
 
-type CtaVariant = 'primary' | 'secondary';
+type CtaVariant = "primary" | "secondary";
 
 interface CtaButtonProps {
   text: string;
   variant?: CtaVariant;
+  disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  isActive?: boolean; 
 }
 
 const useStyles = createStyles(
-  (_theme, { variant }: { variant: CtaVariant }) => ({
+  (_theme, { variant, isActive }: { variant: CtaVariant; isActive?: boolean }) => ({
     root: {
-      /* base (.ctas p) */
-      appearance: 'none',
+      appearance: "none",
       borderRadius: 128,
       height: 48,
-      padding: '0 20px',
-      border: '1px solid transparent',
-      transition: 'background .2s,color .2s,border-color .2s',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      padding: "0 20px",
+      border: "1px solid transparent",
+      transition: "background .2s,color .2s,border-color .2s",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       fontSize: 16,
-      lineHeight: '20px',
+      lineHeight: "20px",
       fontWeight: 500,
 
-      /* primary */
-      ...(variant === 'primary' && {
-        background: '#0a0a0a',   // ← fondo fijo
-        color: '#ededed',        // ← texto fijo
+      ...(variant === "primary" && {
+        background: "#0a0a0a",
+        color: "#ededed",
         gap: 8,
+        ...(!isActive && { 
+          "&:hover": {
+            background: "#ededed",
+            color: "#0a0a0a",
+          },
+        }),
       }),
 
-      /* secondary */
-      ...(variant === 'secondary' && {
-        background: 'transparent',
-        color: '#0a0a0a',
-        borderColor: '#e2e8f0', 
+      ...(variant === "secondary" && {
+        background: "transparent",
+        color: "#0a0a0a",
+        borderColor: "#e2e8f0",
         minWidth: 158,
-        '&:hover': {
-          background: '#0a0a0a',  
-          color: '#ededed',
-        },
+        ...(!isActive && { 
+          "&:hover": {
+            background: "#0a0a0a",
+            color: "#ededed",
+          },
+        }),
       }),
     },
   })
@@ -54,16 +61,18 @@ const useStyles = createStyles(
 
 const CtaButton: React.FC<CtaButtonProps> = ({
   text,
-  variant = 'primary',
+  disabled = false,
+  variant = "primary",
   onClick,
   className,
+  isActive = false,
 }) => {
-  const { classes, cx } = useStyles({ variant });
+  const { classes, cx } = useStyles({ variant, isActive });
 
   return (
-    <button
-        
-      className={cx(classes.root, className)}
+    <button 
+      disabled={disabled} 
+      className={cx(classes.root, className)} 
       onClick={onClick}
     >
       {text}

@@ -3,7 +3,7 @@ import styles from './page.module.css'
 
 const Settings = () => {
   return (
-    <section className={styles.container}>Config</section>
+    <section className={styles.container}>Proximamente</section>
   )
 }
 
