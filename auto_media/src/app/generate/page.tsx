@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import styles from "./page.module.css";
 import CtaButton from "@/components/common/cta-button";
-import { TextInput } from "@mantine/core";
-import CustomTextInput from "@/components/common/customInputText";
+import CustomTextInput from "@/components/common/custom-input-text";
 
 type GenerationMode = "article" | "topic";
 
