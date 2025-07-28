@@ -1,6 +1,6 @@
-// app/layout.tsx
 import './globals.css';
 import '@mantine/core/styles.css'; 
+
 import type { Metadata } from 'next';
 import {
   ColorSchemeScript,

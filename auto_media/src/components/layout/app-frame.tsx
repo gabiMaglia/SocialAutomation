@@ -6,41 +6,48 @@ import {
   Group,
   NavLink,
   Stack,
-  Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconHome2, IconSettings } from '@tabler/icons-react';
+import Image from 'next/image';
+import logo from '@/assets/logo.webp'
+
+import styles from "./app-frame.module.css";
 
 export default function AppFrame({ children }: { children: React.ReactNode }) {
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-  
+  const [opened, { toggle }] = useDisclosure();  
 
   return (
-  <AppShell
+    <AppShell
       padding="md"
       header={{ height: 60 }}
-      navbar={{
+      className={styles.page}
+      aside={{
         width: 300,
         breakpoint: 'sm',
-        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+        collapsed: { mobile: !opened, desktop: !opened },
       }}
+      layout="alt"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="sm" size="sm" />
-          <Burger opened={desktopOpened} onClick={toggleDesktop} visibleFrom="sm" size="sm" />
-          The burger icon is always visible
+        <Group h="100%" px="md" justify="space-between">
+            <div>
+              {/* TODO LOGO */}
+              {/* <Image alt='Social-Automation' objectFit='contain' width={60} height={60} src={logo}></Image> */}
+            </div> 
+          <Burger opened={opened} onClick={toggle} size="sm" />
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
-        You can collapse the Navbar both on desktop and mobile. After sm breakpoint, the navbar is
-        no longer offset by padding in the main element and it takes the full width of the screen
-        when opened.
-      </AppShell.Navbar>
-      <AppShell.Main>
-       {children}
-      </AppShell.Main>
+
+      <AppShell.Aside p="md">
+        <Stack>
+          <NavLink  href="/" label="Inicio"        leftSection={<IconHome2    size={16} />} />
+          <NavLink  href="/generate" label="Generar Posteo" leftSection={<IconSettings size={16} />} />
+          <NavLink  href="/config" label="Configuración" leftSection={<IconSettings size={16} />} />
+        </Stack>
+      </AppShell.Aside>
+
+      <AppShell.Main className={styles.main}>{children}</AppShell.Main>
     </AppShell>
   );
 }
