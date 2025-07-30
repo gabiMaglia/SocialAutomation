@@ -11,13 +11,14 @@ import {
   useMantineTheme,
   rem,
   Skeleton,
+  Flex,
 } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { PostData } from "@/types/postData";
 
 interface PostPreviewProps {
-  post: PostData;
+  post?: PostData;
   compactMode?: boolean;
   onClick?: () => void;
 }
@@ -75,6 +76,30 @@ const PostPreview = ({
     HTMLElement,
     React.ComponentPropsWithoutRef<"strong">
   >((props, ref) => <Text component="strong" fw={700} ref={ref} {...props} />);
+
+  if (!post) {
+  return (
+    <Flex
+      w="100%"
+      h={300}
+      justify="center"
+      align='center'
+    
+ 
+      style={{
+        textAlign: 'center',
+        border: '1px dashed #ccc',
+        borderRadius: '8px',
+        padding: '1rem',
+        color: '#666',
+        fontStyle: 'italic',
+      }}
+    >
+      ¿En base a qué quieres que genere un posteo?
+    </Flex>
+  );
+}
+
 
   if (compactMode) {
     return (

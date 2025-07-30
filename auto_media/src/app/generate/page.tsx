@@ -60,7 +60,7 @@ const Dashboard = () => {
       </Flex>
 
       <Box style={{ overflow: 'auto', height: '100%' }}>
-        <PostPreview key={post.id} post={post} />
+        <PostPreview />
       </Box>
 
       <form className={styles.inputForm} onSubmit={(e) => e.preventDefault()}>
