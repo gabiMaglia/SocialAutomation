@@ -59,7 +59,7 @@ const Dashboard = () => {
         </div>
       </Flex>
 
-      <Box style={{ overflow: 'auto', border: '1px solid black', height: '100%' }}>
+      <Box style={{ overflow: 'auto', height: '100%' }}>
         <PostPreview key={post.id} post={post} />
       </Box>
 
