@@ -4,40 +4,44 @@ import React, { useState } from 'react';
 import CtaButton from '@/components/common/cta-button';
 import CustomTextInput from '@/components/common/custom-input-text';
 import styles from './page.module.css';
-import { Box, Flex } from '@mantine/core';
+import { Box, Flex, Loader } from '@mantine/core';
 import PostPreview from '@/components/post-preview';
-import mockData from '@/mockData/post.json';
 import { usePostModal } from '@/components/common/custom-modal';
 import { PostData } from '@/types/postData';
+import { getPostFromArticle, getPostFromPhrase } from '@/lib/n8n.service';
 
-const post: PostData = mockData[0];
+
 
 type GenerationMode = 'article' | 'topic';
 
 const Dashboard = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [post, setPost] = useState<PostData>();
   const [mode, setMode] = useState<GenerationMode>('article');
 
   const { openModal, Modal } = usePostModal();
 
-  const handleCreateContent = () => {
-    setLoading(true);
-    try {
-      setTimeout(() => {
-        if (mode === 'article') {
-          console.log('Generating from article:', input);
-        } else {
-          console.log('Generating from topic:', input);
-        }
-        openModal(post); // <-- Abrimos el modal con el post generado (mock por ahora)
-      }, 2000);
-    } catch (error) {
-      console.error('Error during generation:', error);
-    } finally {
-      setTimeout(() => setLoading(false), 2000);
+const handleCreateContent = async (input: string) => {
+  setLoading(true);
+  try {
+    let response: PostData;
+
+    if (mode === 'article') {
+      response = await getPostFromArticle(input);
+    } else {
+      response = await getPostFromPhrase(input);
     }
-  };
+
+    setPost(response);
+    openModal(response); 
+  } catch (error) {
+    console.error('Error during generation:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <section className={styles.container}>
@@ -51,7 +55,7 @@ const Dashboard = () => {
             onClick={() => setMode('article')}
           />
           <CtaButton
-            text="Desde un tema"
+            text="Desde una tematica"
             variant={mode === 'topic' ? 'primary' : 'secondary'}
             isActive={mode === 'topic'}
             onClick={() => setMode('topic')}
@@ -60,24 +64,24 @@ const Dashboard = () => {
       </Flex>
 
       <Box style={{ overflow: 'auto', height: '100%' }}>
-        <PostPreview />
+        <PostPreview post={post ?? undefined} />
+        {loading && <Loader type='dots' />}
       </Box>
 
       <form className={styles.inputForm} onSubmit={(e) => e.preventDefault()}>
         <CustomTextInput
-          label={mode === 'article' ? 'Ingresa el artículo' : 'Ingresa el tema'}
+          label={mode === 'article' ? 'Ingresa el link del artículo' : 'Ingresa la tematica'}
           value={input}
           onChange={setInput}
-          placeholder="Escribe aquí..."
+          placeholder={ mode === 'article' ? 'http://' : 'Novedades React 19'}
         />
         <CtaButton
           text="Generar contenido"
-          onClick={handleCreateContent}
+          onClick={() => handleCreateContent(input)}
           disabled={input.trim() === '' || loading}
         />
       </form>
 
-      {/* Modal controlado desde el hook */}
       <Modal renderContent={(post) => <PostPreview post={post} />} />
     </section>
   );

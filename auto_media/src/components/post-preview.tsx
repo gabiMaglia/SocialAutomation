@@ -206,7 +206,7 @@ const PostPreview = ({
               flexGrow: 1,
             }}
           >
-            {post.title || "Proxies con Redux"}
+            {post.title || ""}
           </Title>
           <Box
             style={{
