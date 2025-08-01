@@ -4,4 +4,8 @@ export interface PostData {
   output: string;
   date?: string;  
   imageUrl?: string;
+  posted?:boolean; 
+  socialNetwor?:SocialMedia
 }
+
+export type SocialMedia = 'facebook' | 'linkedin' ;
