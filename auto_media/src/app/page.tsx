@@ -8,6 +8,7 @@ import PostPreview from '@/components/post-preview';
 import CtaButton from '@/components/common/cta-button';
 import { PostData } from '@/types/postData';
 import { usePostModal } from '@/components/common/custom-modal';
+import CompactPostPreview from '@/components/post-preview-compact';
 
 export default function Home() {
   const router = useRouter();
@@ -55,10 +56,9 @@ export default function Home() {
         ) : (
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" verticalSpacing="md">
             {posts.map((post) => (
-              <PostPreview
+              <CompactPostPreview
                 key={post.id}
                 post={post}
-                compactMode
                 onClick={() => openModal(post)}
               />
             ))}

@@ -10,6 +10,7 @@ import { usePostModal } from "@/components/common/custom-modal";
 import { PostData } from "@/types/postData";
 import { getPostFromArticle, getPostFromPhrase } from "@/lib/n8n.service";
 import { createPost } from "@/lib/post.service";
+import BigPostPreview from "@/components/post-preview";
 
 type GenerationMode = "article" | "topic";
 
@@ -69,7 +70,7 @@ const Dashboard = () => {
       </Flex>
 
       <Box style={{ overflow: "auto", height: "100%" }}>
-        <PostPreview post={post ?? undefined} />
+        {post && <BigPostPreview post={post} />}
         {loading && <Loader type="dots" />}
       </Box>
 

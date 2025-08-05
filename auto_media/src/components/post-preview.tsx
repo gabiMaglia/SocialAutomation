@@ -10,24 +10,16 @@ import {
   Anchor,
   useMantineTheme,
   rem,
-  Skeleton,
-  Flex,
 } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { PostData } from "@/types/postData";
 
-interface PostPreviewProps {
-  post?: PostData;
-  compactMode?: boolean;
-  onClick?: () => void;
+interface BigPostPreviewProps {
+  post: PostData;
 }
 
-const PostPreview = ({
-  post,
-  compactMode = false,
-  onClick,
-}: PostPreviewProps) => {
+const BigPostPreview = ({ post }: BigPostPreviewProps) => {
   const theme = useMantineTheme();
 
   const renderWithHashtags = (text: string) => {
@@ -50,7 +42,6 @@ const PostPreview = ({
     });
   };
 
-  // eslint-disable-next-line react/display-name
   const CustomParagraph = React.forwardRef<
     HTMLParagraphElement,
     React.ComponentPropsWithoutRef<"p">
@@ -76,89 +67,6 @@ const PostPreview = ({
     HTMLElement,
     React.ComponentPropsWithoutRef<"strong">
   >((props, ref) => <Text component="strong" fw={700} ref={ref} {...props} />);
-
-  if (!post) {
-  return (
-    <Flex
-      w="100%"
-      h={300}
-      justify="center"
-      align='center'
-    
- 
-      style={{
-        textAlign: 'center',
-        border: '1px dashed #ccc',
-        borderRadius: '8px',
-        padding: '1rem',
-        color: '#666',
-        fontStyle: 'italic',
-      }}
-    >
-      ¿En base a qué quieres que genere un posteo?
-    </Flex>
-  );
-}
-
-
-  if (compactMode) {
-    return (
-      <Card
-        withBorder
-        radius="md"
-        style={{
-          width: rem(300),
-          height: rem(300),
-          cursor: "pointer",
-          display: "flex",
-          flexDirection: "column",
-          transition: "transform 0.2s",
-          "&:hover": {
-            transform: "scale(1.02)",
-          },
-        }}
-        onClick={onClick}
-      >
-        {post.imageUrl ? (
-          <Box
-            style={{
-              width: "100%",
-              height: rem(120),
-              position: "relative",
-              overflow: "hidden",
-              borderTopLeftRadius: theme.radius.md,
-              borderTopRightRadius: theme.radius.md,
-            }}
-          >
-            <Image
-              src={post.imageUrl}
-              alt="Post cover"
-              fill
-              style={{ objectFit: "cover" }}
-              priority
-            />
-          </Box>
-        ) : (
-          <Skeleton height={rem(120)} radius="md" />
-        )}
-
-        <Box
-          p="sm"
-          style={{ flex: 1, display: "flex", flexDirection: "column" }}
-        >
-          <Text fw={600} lineClamp={2} style={{ flexGrow: 1 }}>
-            {post.output.split("\n")[3]}
-            {post.output.split("\n")[4]}
-          </Text>
-          <Group gap="xs" c="dimmed" mt="auto" style={{ fontSize: rem(12) }}>
-            <Text span>
-              {post.date ? new Date(post.date).toLocaleDateString() : ""}
-            </Text>
-          </Group>
-        </Box>
-      </Card>
-    );
-  }
 
   return (
     <Card
@@ -202,7 +110,7 @@ const PostPreview = ({
             style={{
               fontSize: rem(20),
               fontWeight: 600,
-              color: theme.colors.dark[7],
+              color: theme.colors.dark[1],
               flexGrow: 1,
             }}
           >
@@ -252,12 +160,9 @@ const PostPreview = ({
         <Divider my="sm" />
 
         <Group gap="xs" c="dimmed" style={{ fontSize: rem(12) }}>
-          <Text span>5 reacciones</Text>
-          <Text span>•</Text>
-          <Text span>2 comentarios</Text>
           {post.date && (
             <>
-              <Text span>•</Text>
+              <Text span>Creado en la fecha:</Text>
               <Text span>{new Date(post.date).toLocaleDateString()}</Text>
             </>
           )}
@@ -267,4 +172,4 @@ const PostPreview = ({
   );
 };
 
-export default PostPreview;
+export default BigPostPreview;
