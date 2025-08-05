@@ -1,7 +1,7 @@
 import { PostData } from '@/types/postData'
 import axios from 'axios'
 
-const N8NURL = process.env.N8N_ADDRESS || "https://team7.n8n.darwoft.io"
+const N8NURL = process.env.N8N_ADDRESS 
 
 export const postOnLinkedin = async (phrase: string) => {
   try {
