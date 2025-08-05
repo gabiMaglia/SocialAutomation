@@ -17,21 +17,27 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    if (!body.output || !body.socialNetwor) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
+    
 
+    if (!body.output) {
+      return NextResponse.json({ error: 'Missing required field: output' }, { status: 400 });
+    }
+    console.log(body)
     const newPost = await db.insert(posts).values({
-      title: body.title ?? null,
+      title: body.title || null,
       output: body.output,
-      date: body.date ? new Date(body.date) : new Date(),
-      imageUrl: body.imageUrl ?? null,
-      posted: body.posted ?? false,
-      socialNetwor: body.socialNetwor,
+      imageUrl: body.imageUrl || null,
+      posted: false, 
+      socialNetwork: null,
     }).returning();
 
     return NextResponse.json(newPost[0], { status: 201 });
+
   } catch (error) {
-    return NextResponse.json({ error: 'Error creating post' }, { status: 500 });
+    console.error('Database error:', error);
+    return NextResponse.json(
+      { error: 'Error creating post', details: error }, 
+      { status: 500 }
+    );
   }
 }

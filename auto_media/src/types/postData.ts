@@ -5,7 +5,7 @@ export interface PostData {
   date?: string;  
   imageUrl?: string;
   posted?:boolean; 
-  socialNetwor?:SocialMedia
+  socialNetwork?:SocialMedia
 }
 
-export type SocialMedia = 'facebook' | 'linkedin' ;
+export type SocialMedia = 'facebook' | 'linkedin' | null ;

@@ -54,3 +54,5 @@ export const getPostFromArticle = async (phrase: string): Promise<PostData> => {
     throw new Error("No se pudo generar el post desde el artículo")
   }
 }
+
+

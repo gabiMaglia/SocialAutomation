@@ -15,12 +15,16 @@ export async function fetchPosts(): Promise<PostData[]> {
     throw err;
   }
 }
+
 export async function createPost(post: Partial<PostData>): Promise<PostData> {
   try {
     const res = await fetch('/api/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(post),
+      body: JSON.stringify({
+        ...post,
+        socialNetwork: undefined 
+      }),
     });
 
     if (!res.ok) {
