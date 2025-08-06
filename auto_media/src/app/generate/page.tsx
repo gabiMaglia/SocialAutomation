@@ -11,7 +11,7 @@ import { PostData } from "@/types/postData";
 import { getPostFromArticle, getPostFromPhrase } from "@/lib/n8n.service";
 import { createPost } from "@/lib/post.service";
 import BigPostPreview from "@/components/post-preview";
-
+import CloudinaryImagePicker, { CloudinaryImage } from "@/components/image-picker";
 type GenerationMode = "article" | "topic";
 
 const Dashboard = () => {
@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostData>();
   const [mode, setMode] = useState<GenerationMode>("article");
+  const [image, setImage] = useState<CloudinaryImage | null>(null);
 
   const { openModal, Modal } = usePostModal();
 
@@ -32,12 +33,13 @@ const Dashboard = () => {
       } else {
         response = await getPostFromPhrase(input);
       }
+
       console.log(response)
 
       const dbPost = await createPost({
         title: input, 
         output: response.output,
-        imageUrl: response.imageUrl || undefined,
+        imageUrl: image?.url|| undefined,
       });
 
       setPost(dbPost);
@@ -67,6 +69,7 @@ const Dashboard = () => {
             onClick={() => setMode("topic")}
           />
         </div>
+       <CloudinaryImagePicker value={image} onChange={setImage} />
       </Flex>
 
       <Box style={{ overflow: "auto", height: "100%" }}>

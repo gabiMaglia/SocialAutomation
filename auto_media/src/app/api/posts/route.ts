@@ -1,4 +1,3 @@
-// app/api/posts/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { posts } from '@/db/schema';
@@ -22,7 +21,7 @@ export async function POST(request: NextRequest) {
     if (!body.output) {
       return NextResponse.json({ error: 'Missing required field: output' }, { status: 400 });
     }
-    console.log(body)
+
     const newPost = await db.insert(posts).values({
       title: body.title || null,
       output: body.output,

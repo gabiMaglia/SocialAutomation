@@ -5,7 +5,6 @@ import {
   Text,
   Group,
   Box,
-  Skeleton,
   useMantineTheme,
   rem,
   Title,

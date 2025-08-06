@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 import * as schema from './schema';
 
 const connectionString =
-  process.env.DATABASE_URL 
+  process.env.NEXT_PUBLIC_DATABASE_URL 
 
 console.log('🔌 Connecting to PostgreSQL...');
 

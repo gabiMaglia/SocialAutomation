@@ -120,7 +120,7 @@ const BigPostPreview = ({ post }: BigPostPreviewProps) => {
             style={{
               width: rem(24),
               height: rem(24),
-              backgroundColor: "#0a66c2",
+              backgroundColor: post.posted? "#0a66c2" : theme.colors.gray[4],
               borderRadius: theme.radius.sm,
               display: "flex",
               alignItems: "center",
@@ -129,7 +129,8 @@ const BigPostPreview = ({ post }: BigPostPreviewProps) => {
               fontWeight: "bold",
             }}
           >
-            L
+            {post.posted && post?.socialNetwork?.charAt(0).toUpperCase()}
+           
           </Box>
         </Group>
 
