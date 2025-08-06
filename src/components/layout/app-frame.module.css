@@ -1,0 +1,5 @@
+.main { 
+  display: flex;
+  background-color: #F8F9FA;
+  justify-content: space-between;
+}
