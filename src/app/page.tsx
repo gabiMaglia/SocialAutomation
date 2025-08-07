@@ -1,14 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { SimpleGrid, Text, Center, Loader } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Center,
+  Loader,
+  SimpleGrid,
+  Stack,
+  Group,
+} from '@mantine/core';
 import { useRouter } from 'next/navigation';
-import styles from './page.module.css';
-import PostPreview from '@/components/post-preview';
-import CtaButton from '@/components/common/cta-button';
 import { PostData } from '@/types/postData';
-import { usePostModal } from '@/components/common/custom-modal';
+import CtaButton from '@/components/common/cta-button';
+import PostPreview from '@/components/post-preview';
 import CompactPostPreview from '@/components/post-preview-compact';
+import { usePostModal } from '@/components/common/custom-modal';
 
 export default function Home() {
   const router = useRouter();
@@ -20,8 +28,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/posts');
-        console.log(res)
+        const res = await fetch('/api/posts', { cache: 'no-store' });
         if (!res.ok) throw new Error('Error fetching posts');
         const data = await res.json();
         setPosts(data);
@@ -31,30 +38,40 @@ export default function Home() {
         setPosts([]);
       }
     };
-
     fetchPosts();
   }, []);
 
   return (
-    <section className={styles.container}>
-      <header className={styles.header}>
-        <Text size="xl" fw={700}>
-          Últimos posteos
+    <Container size="lg" py="xl">
+      {/* HERO */}
+      <Stack gap="sm" align="center" mb="lg">
+        <Title order={1} fw={900} ta="center">
+          Fluvi
+        </Title>
+        <Text size="lg" c="dimmed" ta="center" maw={600}>
+          Generá copies irresistibles y profesionales para tus redes sociales en segundos.
         </Text>
-        <CtaButton text="Nuevo +" onClick={() => router.push('/generate')} />
-      </header>
+        <CtaButton text="Nuevo post +" onClick={() => router.push('/generate')} />
+      </Stack>
 
-      <main>
+      {/* LISTA DE POSTS */}
+      <Stack gap="lg">
+        <Group justify="space-between">
+          <Title order={3}>Últimos posteos</Title>
+          {/* si querés un segundo botón aquí, descomentalo */}
+          {/* <CtaButton text="Nuevo +" onClick={() => router.push('/generate')} /> */}
+        </Group>
+
         {posts === null ? (
-          <Center mt="lg">
+          <Center py="xl">
             <Loader />
           </Center>
         ) : posts.length === 0 ? (
-          <Center mt="lg">
+          <Center py="xl">
             <Text>Aún no hay posts registrados.</Text>
           </Center>
         ) : (
-          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" verticalSpacing="md">
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
             {posts.map((post) => (
               <CompactPostPreview
                 key={post.id}
@@ -64,9 +81,10 @@ export default function Home() {
             ))}
           </SimpleGrid>
         )}
+      </Stack>
 
-        <Modal renderContent={(post) => <PostPreview post={post} />} />
-      </main>
-    </section>
+      {/* MODAL */}
+      <Modal renderContent={(post) => <PostPreview post={post} />} />
+    </Container>
   );
 }
