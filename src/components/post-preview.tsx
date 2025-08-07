@@ -67,10 +67,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function BigPostPreview({ post }: BigPostPreviewProps) {
-  const { classes, theme } = useStyles();
+/* —— Components usados en ReactMarkdown (con displayName) —— */
 
-  /* —— Markdown helpers —— */
+const MarkdownParagraph = forwardRef<
+  HTMLParagraphElement,
+  React.ComponentPropsWithoutRef<'p'>
+>(({ children, ...props }, ref) => {
   const renderWithHashtags = (text: string) =>
     text.split(/(#\w+)/g).map((part, i) =>
       part.startsWith('#') ? (
@@ -85,36 +87,67 @@ export default function BigPostPreview({ post }: BigPostPreviewProps) {
         </Anchor>
       ) : (
         part
-      )
+      ),
     );
 
-  const CustomParagraph = forwardRef<
-    HTMLParagraphElement,
-    React.ComponentPropsWithoutRef<'p'>
-  >(({ children, ...props }, ref) => {
-    if (!children) return null;
-    const txt =
-      typeof children === 'string'
-        ? children
-        : Array.isArray(children)
-        ? children.map((c) => (typeof c === 'string' ? c : '')).join('')
-        : '';
-    return (
-      <p ref={ref} {...props}>
-        {renderWithHashtags(txt)}
-      </p>
-    );
-  });
-  CustomParagraph.displayName = 'CustomParagraph';
+  if (!children) return null;
 
-  const CustomStrong = forwardRef<
-    HTMLElement,
-    React.ComponentPropsWithoutRef<'strong'>
-  >((props, ref) => (
-    <Text component="strong" fw={700} ref={ref} {...props} />
-  ));
-  CustomStrong.displayName = 'CustomStrong';
-  /* ———————————————— */
+  const rawText =
+    typeof children === 'string'
+      ? children
+      : Array.isArray(children)
+      ? children.map((c) => (typeof c === 'string' ? c : '')).join('')
+      : '';
+
+  return (
+    <p ref={ref} {...props}>
+      {renderWithHashtags(rawText)}
+    </p>
+  );
+});
+MarkdownParagraph.displayName = 'MarkdownParagraph';
+
+const MarkdownStrong = forwardRef<
+  HTMLElement,
+  React.ComponentPropsWithoutRef<'strong'>
+>((props, ref) => <Text component="strong" fw={700} ref={ref} {...props} />);
+MarkdownStrong.displayName = 'MarkdownStrong';
+
+const MarkdownLink = forwardRef<
+  HTMLAnchorElement,
+  React.ComponentPropsWithoutRef<'a'>
+>(({ href, ...props }, ref) => (
+  <Anchor
+    {...props}
+    href={href}
+    ref={ref}
+    target="_blank"
+    rel="noopener noreferrer"
+    color="blue"
+    underline="hover"
+  />
+));
+MarkdownLink.displayName = 'MarkdownLink';
+
+const H1 = (props: React.ComponentPropsWithoutRef<'h1'>) => (
+  <Title order={1} {...props} />
+);
+H1.displayName = 'MarkdownH1';
+
+const H2 = (props: React.ComponentPropsWithoutRef<'h2'>) => (
+  <Title order={2} {...props} />
+);
+H2.displayName = 'MarkdownH2';
+
+const H3 = (props: React.ComponentPropsWithoutRef<'h3'>) => (
+  <Title order={3} {...props} />
+);
+H3.displayName = 'MarkdownH3';
+
+/* ———————————————————————————————————————————————— */
+
+export default function BigPostPreview({ post }: BigPostPreviewProps) {
+  const { classes, theme } = useStyles();
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -153,20 +186,12 @@ export default function BigPostPreview({ post }: BigPostPreviewProps) {
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            p: CustomParagraph,
-            a: ({ node, ...props }) => (
-              <Anchor
-                {...props}
-                target="_blank"
-                rel="noopener noreferrer"
-                color="blue"
-                underline="hover"
-              />
-            ),
-            h1: ({ node, ...props }) => <Title order={1} {...props} />,
-            h2: ({ node, ...props }) => <Title order={2} {...props} />,
-            h3: ({ node, ...props }) => <Title order={3} {...props} />,
-            strong: CustomStrong,
+            p: MarkdownParagraph,
+            a: MarkdownLink,
+            h1: H1,
+            h2: H2,
+            h3: H3,
+            strong: MarkdownStrong,
           }}
         >
           {post.output}

@@ -58,8 +58,6 @@ export default function Home() {
       <Stack gap="lg">
         <Group justify="space-between">
           <Title order={3}>Últimos posteos</Title>
-          {/* si querés un segundo botón aquí, descomentalo */}
-          {/* <CtaButton text="Nuevo +" onClick={() => router.push('/generate')} /> */}
         </Group>
 
         {posts === null ? (
@@ -81,7 +79,12 @@ export default function Home() {
             ))}
           </SimpleGrid>
         )}
-      </Stack>
+    {error && (
+          <Center>
+            <Text color="red">{error}</Text>
+          </Center>
+        )}
+    </Stack>
 
       {/* MODAL */}
       <Modal renderContent={(post) => <PostPreview post={post} />} />

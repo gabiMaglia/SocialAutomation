@@ -9,8 +9,6 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconHome2, IconSettings } from '@tabler/icons-react';
-import Image from 'next/image';
-import logo from '@/assets/logo.webp'
 
 import styles from "./app-frame.module.css";
 
