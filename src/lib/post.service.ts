@@ -38,3 +38,42 @@ export async function createPost(post: Partial<PostData>): Promise<PostData> {
     throw err;
   }
 }
+
+export async function updatePost(
+  id: number,
+  updates: Partial<PostData>,
+): Promise<PostData> {
+  try {
+    const res = await fetch(`/api/posts/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error?.error || 'Failed to update post');
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error('[updatePost] Error:', err);
+    throw err;
+  }
+}
+
+export async function deletePost(id: number): Promise<{ message: string; id: number }> {
+  try {
+    const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error?.error || 'Failed to delete post');
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error('[deletePost] Error:', err);
+    throw err;
+  }
+}

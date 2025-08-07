@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 import {
   Container,
   Title,
@@ -10,13 +10,13 @@ import {
   SimpleGrid,
   Stack,
   Group,
-} from '@mantine/core';
-import { useRouter } from 'next/navigation';
-import { PostData } from '@/types/postData';
-import CtaButton from '@/components/common/cta-button';
-import PostPreview from '@/components/post-preview';
-import CompactPostPreview from '@/components/post-preview-compact';
-import { usePostModal } from '@/components/common/custom-modal';
+} from "@mantine/core";
+import { useRouter } from "next/navigation";
+import { PostData } from "@/types/postData";
+import CtaButton from "@/components/common/cta-button";
+import PostPreview from "@/components/post-preview";
+import CompactPostPreview from "@/components/post-preview-compact";
+import { usePostModal } from "@/components/common/custom-modal";
 
 export default function Home() {
   const router = useRouter();
@@ -25,21 +25,22 @@ export default function Home() {
   const [posts, setPosts] = useState<PostData[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch('/api/posts', { cache: 'no-store' });
-        if (!res.ok) throw new Error('Error fetching posts');
-        const data = await res.json();
-        setPosts(data);
-      } catch (err) {
-        console.error(err);
-        setError('No se pudieron cargar los posts.');
-        setPosts([]);
-      }
-    };
-    fetchPosts();
+  const loadPosts = useCallback(async () => {
+    try {
+      setError(null);
+      const res = await fetch('/api/posts', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Error fetching posts');
+      const data = await res.json();
+      setPosts(data);
+    } catch (err) {
+      console.error(err);
+      setPosts([]);
+      setError('No se pudieron cargar los posts.');
+    }
   }, []);
+
+
+  useEffect(() => { loadPosts(); }, [loadPosts]);
 
   return (
     <Container size="lg" py="xl">
@@ -49,9 +50,13 @@ export default function Home() {
           Fluvi
         </Title>
         <Text size="lg" c="dimmed" ta="center" maw={600}>
-          Generá copies irresistibles y profesionales para tus redes sociales en segundos.
+          Generá copies irresistibles y profesionales para tus redes sociales en
+          segundos.
         </Text>
-        <CtaButton text="Nuevo post +" onClick={() => router.push('/generate')} />
+        <CtaButton
+          text="Nuevo post +"
+          onClick={() => router.push("/generate")}
+        />
       </Stack>
 
       {/* LISTA DE POSTS */}
@@ -74,17 +79,18 @@ export default function Home() {
               <CompactPostPreview
                 key={post.id}
                 post={post}
+                onDeleted={loadPosts} 
                 onClick={() => openModal(post)}
               />
             ))}
           </SimpleGrid>
         )}
-    {error && (
+        {error && (
           <Center>
             <Text color="red">{error}</Text>
           </Center>
         )}
-    </Stack>
+      </Stack>
 
       {/* MODAL */}
       <Modal renderContent={(post) => <PostPreview post={post} />} />

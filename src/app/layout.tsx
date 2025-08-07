@@ -9,6 +9,7 @@ import {
 } from "@mantine/core";
 import { Geist, Geist_Mono } from "next/font/google";
 import AppFrame from "@/components/layout/app-frame";
+import { ModalsProvider } from "@mantine/modals";
 
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({
@@ -32,16 +33,22 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider
           defaultColorScheme="auto"
           theme={{
-            primaryColor: "cyan",
-            fontFamily: "var(--font-geist-sans)",
-            headings: { fontFamily: "var(--font-geist-sans)" },
+            fontFamily:
+              'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            headings: {
+              fontFamily:
+                'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            },
           }}
         >
-          <AppFrame>{children}</AppFrame>
+          <ModalsProvider>
+
+            <AppFrame>{children}</AppFrame>
+          </ModalsProvider>
         </MantineProvider>
       </body>
     </html>
