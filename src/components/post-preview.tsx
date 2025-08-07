@@ -67,8 +67,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-/* —— Components usados en ReactMarkdown (con displayName) —— */
-
 const MarkdownParagraph = forwardRef<
   HTMLParagraphElement,
   React.ComponentPropsWithoutRef<'p'>
