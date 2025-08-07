@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
+import { SearchApiResponse } from '@/types/postData';
 
 export const runtime = 'nodejs'; // fuerza Node runtime
 
@@ -30,9 +31,9 @@ export async function GET(req: NextRequest) {
       .expression(`resource_type:image AND folder:${folder}`)
       .sort_by('created_at', 'desc')
       .max_results(max)
-      .execute();
+      .execute() as SearchApiResponse;
 
-    const items = (res.resources ?? []).map((r: any) => ({
+    const items = (res.resources ?? []).map((r) => ({
       publicId: r.public_id as string,
       url: r.secure_url as string,
       bytes: r.bytes as number,
@@ -41,8 +42,9 @@ export async function GET(req: NextRequest) {
     }));
 
     return NextResponse.json({ items });
-  } catch (e: any) {
-    console.error('[cloudinary/list] error:', e?.message || e);
-    return NextResponse.json({ error: e?.message || 'Cloudinary list failed' }, { status: 500 });
+  } catch (e: unknown) {
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    console.error('[cloudinary/list] error:', errorMessage);
+    return NextResponse.json({ error: errorMessage || 'Cloudinary list failed' }, { status: 500 });
   }
 }
